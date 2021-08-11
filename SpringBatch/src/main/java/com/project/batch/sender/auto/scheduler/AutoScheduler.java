@@ -4,6 +4,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.project.batch.core.util.TimeBasedSequenceIdFactory;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,6 +17,8 @@ public class AutoScheduler extends AbstractAutoScheduler{
 	@Override
 	public void scheduled(){
 		log.info("¼Û¿µ¹Î");
+		
+		final String pollKey = TimeBasedSequenceIdFactory.seq();
 	}
 
 }
