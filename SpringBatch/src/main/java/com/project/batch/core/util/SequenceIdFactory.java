@@ -5,6 +5,8 @@ import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * SequenceIdFactory is a very simple sequence number producer, which
  * assigns numeric identifiers based on the current time(mec) time 
@@ -21,6 +23,7 @@ import java.util.concurrent.BlockingQueue;
  * @since  2015.03
  */
 
+@Slf4j
 public abstract class SequenceIdFactory extends Thread {
 	protected final String PRE_KEY="01-";
 	
@@ -41,7 +44,10 @@ public abstract class SequenceIdFactory extends Thread {
 	
 	public static String seq(String addKey){
 		try {
+			log.info("价康刮");
+			log.info("价康刮2"+queue.take());
 			return addKey + queue.take();
+			
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 			return addKey+UUID.randomUUID();
@@ -49,6 +55,7 @@ public abstract class SequenceIdFactory extends Thread {
 	}
 	
 	public static String seq(){
+		log.info("价康刮价价"+seq(""));
 		return seq("");
 	}
 
