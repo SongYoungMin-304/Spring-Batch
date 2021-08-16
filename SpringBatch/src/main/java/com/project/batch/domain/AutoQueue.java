@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AutoQueue implements Serializable{
 	
 	 @Id
-	 private long QueueId;
+	 private long queueId;
 	 
 	 private String pollKey;
 	 private String flag;
