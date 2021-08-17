@@ -26,7 +26,6 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
     private int maxMsgExpiredDays;
 	
 	public int updatePollKey(String pollKey) {
-		log.info("¼Û¿µ¹Î¼Û¼Û"+pollKey);
 	   	 String nowDateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateTimeFormat));
 	     String twoHourAgoDateStr = LocalDateTime.now().minusDays(maxMsgExpiredDays)
 	         .format(DateTimeFormatter.ofPattern(dateTimeFormat));

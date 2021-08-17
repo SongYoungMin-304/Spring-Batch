@@ -28,11 +28,10 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 	public List<T> doScheduleList(String pollKey) {
 		// int cnt = this.batchQueService.updatePreBatchSchd(serverId, channelType);
 
-		log.info("¼Û¿µ¹Î11111"+pollKey);
 		int updateSucc = abstractAutoService.updatePollKey(pollKey);
 
 		if (updateSucc == 0) {
-			log.info("There is no Scheduler");
+			log.debug("There is no Scheduler");
 			return null;
 		}
 		

@@ -44,8 +44,6 @@ public abstract class SequenceIdFactory extends Thread {
 	
 	public static String seq(String addKey){
 		try {
-			log.info("¼Û¿µ¹Î");
-			log.info("¼Û¿µ¹Î2"+queue.take());
 			return addKey + queue.take();
 			
 		} catch (InterruptedException e) {
@@ -64,5 +62,12 @@ public abstract class SequenceIdFactory extends Thread {
 	}
  
 	abstract public String createSequence();
+	
+	public static void main(String[] args) {
+		System.out.println("¼Û¿µ¹Î2");
+		System.out.println("¼Û¿µ¹Î"+seq());
+		System.out.println("¼Û¿µ¹Î3");
+
+	}
 
 }

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 import com.project.batch.model.AutoQueSchdDto;
 import com.project.batch.sender.auto.scheduler.service.AbstractAutoService;
 import com.project.batch.sender.auto.scheduler.service.ChnScheduleService;
@@ -30,8 +31,8 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 	@Override
 	public void scheduled(){
 		
-		//final String pollKey = TimeBasedSequenceIdFactory.seq();
-		final String pollKey = "1234";
+		final String pollKey = TimeBasedSequenceIdFactory.seq();
+		//final String pollKey = "1234";
 		
 		// 임시 처리
 		List<AutoQueSchdDto> list = this.doScheduleList(pollKey);
