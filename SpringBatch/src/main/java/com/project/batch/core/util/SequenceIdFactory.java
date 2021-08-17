@@ -53,7 +53,6 @@ public abstract class SequenceIdFactory extends Thread {
 	}
 	
 	public static String seq(){
-		log.info("价康刮价价"+seq(""));
 		return seq("");
 	}
 
@@ -64,9 +63,6 @@ public abstract class SequenceIdFactory extends Thread {
 	abstract public String createSequence();
 	
 	public static void main(String[] args) {
-		System.out.println("价康刮2");
-		System.out.println("价康刮"+seq());
-		System.out.println("价康刮3");
 
 	}
 

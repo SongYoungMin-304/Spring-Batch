@@ -8,10 +8,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.project.batch.config.annotation.AopAnnotation;
 import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 import com.project.batch.model.AutoQueSchdDto;
 import com.project.batch.sender.auto.scheduler.service.AbstractAutoService;
-import com.project.batch.sender.auto.scheduler.service.ChnScheduleService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +28,7 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 	}
 
 	@Scheduled(fixedDelay = 5000)
+	@AopAnnotation
 	@Override
 	public void scheduled(){
 		
