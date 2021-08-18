@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 
 @Configuration
-public class batchConfiguration {
+public class BatchConfiguration {
 	
 	 @Bean(name = "timeBasedSequenceIdFactory")
 	    public void timeBasedSequenceIdFactory()

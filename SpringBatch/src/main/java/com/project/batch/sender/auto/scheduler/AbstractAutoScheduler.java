@@ -4,11 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
 
+import com.project.batch.activemq.Sender;
 import com.project.batch.core.contstants.JobParamConstrants;
 import com.project.batch.core.scheduler.Scheduler;
 import com.project.batch.model.AutoQueSchdDto;
@@ -24,6 +27,9 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 	protected final ChnScheduleService<T> abstractAutoService;
 	protected final JobLauncher JobLauncher;
 	protected final Job jobName;
+	
+	@Resource
+    private Sender sender;
 
 	public List<T> doScheduleList(String pollKey) {
 		// int cnt = this.batchQueService.updatePreBatchSchd(serverId, channelType);
@@ -41,6 +47,8 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 	public void execute(T scheduleInfo, String pollKey) {
 
 		try {
+			sender.send("Hello Spring JMS ActiveMQ!");
+			
 			JobLauncher.run(jobName, this.makeJobParameters(pollKey, scheduleInfo));
 		} catch (Exception e) {
 			log.error("job launch failed ", e);

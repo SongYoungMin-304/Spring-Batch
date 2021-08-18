@@ -12,3 +12,10 @@ spring:
       max-lifetime: 420000
       connection-timeout: 10000
       validation-timeout: 10000
+      
+  activemq:
+    broker-url: tcp://127.0.0.1:61616?jms.useAsyncSend=true&wireFormat.tightEncodingEnabled=false
+    user: admin
+    password: admin
+      
+ 
