@@ -12,6 +12,7 @@ import com.project.batch.config.annotation.AopAnnotation;
 import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 import com.project.batch.model.AutoQueSchdDto;
 import com.project.batch.sender.auto.scheduler.service.AbstractAutoService;
+import com.project.batch.sender.auto.scheduler.service.TemplateService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,9 +23,11 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 	
 	public AutoScheduler(
 			AbstractAutoService abstractAutoService,
-			JobLauncher JobLauncher, Job autoQueInterfaceJob
+			JobLauncher JobLauncher, 
+			Job autoQueInterfaceJob,
+			TemplateService templateService
 			) {
-		super(abstractAutoService, JobLauncher, autoQueInterfaceJob);
+		super(abstractAutoService, JobLauncher, autoQueInterfaceJob, templateService);
 	}
 
 	@Scheduled(fixedDelay = 5000)
