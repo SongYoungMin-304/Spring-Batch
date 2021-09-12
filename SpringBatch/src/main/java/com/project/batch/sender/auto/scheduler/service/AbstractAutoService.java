@@ -7,8 +7,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.project.batch.domain.TemplateInfo;
 import com.project.batch.model.AutoQueSchdDto;
 import com.project.batch.repository.AutoQueRepository;
+import com.project.batch.repository.TemplateMsgInfoRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	
 	private final AutoQueRepository autoQueRepository;
+	
+	
 	
 	private final String dateTimeFormat = "yyyyMMddHHmmss";
 	
@@ -59,5 +63,4 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 		// TODO Auto-generated method stub
 		
 	}
-
 }

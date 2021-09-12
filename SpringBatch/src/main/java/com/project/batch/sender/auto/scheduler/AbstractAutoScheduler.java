@@ -14,8 +14,10 @@ import org.springframework.batch.core.launch.JobLauncher;
 import com.project.batch.activemq.Sender;
 import com.project.batch.core.contstants.JobParamConstrants;
 import com.project.batch.core.scheduler.Scheduler;
+import com.project.batch.domain.TemplateInfo;
 import com.project.batch.model.AutoQueSchdDto;
 import com.project.batch.sender.auto.scheduler.service.ChnScheduleService;
+import com.project.batch.sender.auto.scheduler.service.TemplateService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,11 +30,20 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 	protected final JobLauncher JobLauncher;
 	protected final Job jobName;
 	
+	protected final TemplateService templateService;
+	
 	@Resource
     private Sender sender;
 
 	public List<T> doScheduleList(String pollKey) {
 		// int cnt = this.batchQueService.updatePreBatchSchd(serverId, channelType);
+		
+		// getTemplate
+		
+		//log.info("송영민체크송아지");
+		TemplateInfo template = templateService.getTemplateInfo((long)1);
+		
+		
 
 		int updateSucc = abstractAutoService.updatePollKey(pollKey);
 
