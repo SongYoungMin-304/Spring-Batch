@@ -20,7 +20,7 @@ public class LoggingAOP {
 
 	@Around("execution(@com.project.batch.config.annotation.AopAnnotation * *(..))")
 	public void logging(final ProceedingJoinPoint joinPoint) throws Throwable {
-		//log.info("aop Process"+joinPoint.getSignature());
+		log.info("aop Process"+joinPoint.getSignature());
 		joinPoint.proceed();
 	}
 }
