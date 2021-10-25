@@ -2,6 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.5.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	// ë„ì»¤ ì—°ê²° ì²˜ë¦¬
+	id 'com.google.cloud.tools.jib' version '3.1.2'
 }
 
 group = 'com.project'
@@ -23,15 +25,16 @@ dependencies {
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	
 	runtimeOnly 'mysql:mysql-connector-java'
+	runtimeOnly 'com.oracle.database.jdbc:ojdbc8'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.batch:spring-batch-test'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	
-	// Ä³½Ã Ã³¸®
+	// Ä³ï¿½ï¿½ Ã³ï¿½ï¿½
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.ehcache:ehcache:3.8.0'
-    implementation 'javax.cache:cache-api:1.0.0' // expiry ±â´ÉÀ» À§ÇØ ÇÊ¿ä
+    implementation 'javax.cache:cache-api:1.0.0' // expiry ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½
 
 }
 
