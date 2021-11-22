@@ -35,6 +35,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.ehcache:ehcache:3.8.0'
     implementation 'javax.cache:cache-api:1.0.0' // expiry ����� ���� �ʿ�
+	implementation group: 'com.oracle.ojdbc', name: 'orai18n', version: '19.3.0.0'
 
 }
 
