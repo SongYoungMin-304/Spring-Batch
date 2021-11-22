@@ -20,7 +20,7 @@ public class AutoQueItemWriter extends DefaultQueWriter<AutoQueDto>{
 	@Override
 	public void write(List<? extends AutoQueDto> items) throws Exception {
 		// TODO Auto-generated method stub
-		log.info("¼Û¿µ¹Îwriter");
+		log.info("check Writer");
 		
 	}
 

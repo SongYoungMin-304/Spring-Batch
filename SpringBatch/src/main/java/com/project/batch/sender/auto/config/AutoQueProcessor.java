@@ -18,7 +18,7 @@ public class AutoQueProcessor extends DefaultQueProcessor<AutoQueDto>{
 	@Override
 	public AutoQueDto process(AutoQueDto item) throws Exception {
 		// TODO Auto-generated method stub
-		log.info("¼Û¿µ¹Î Process");
+		log.info("Check Process");
 		return item;
 	}
 
