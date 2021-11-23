@@ -40,7 +40,7 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 		
 		// getTemplate
 		
-		//log.info("¼Û¿µ¹ÎÃ¼Å©¼Û¾ÆÁö");
+		//log.info("ï¿½Û¿ï¿½ï¿½ï¿½Ã¼Å©ï¿½Û¾ï¿½ï¿½ï¿½");
 		TemplateInfo template = templateService.getTemplateInfo((long)1);
 		
 		

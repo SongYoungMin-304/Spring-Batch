@@ -20,7 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @ConditionalOnProperty(name = "auto.enabled", havingValue = "true")
 public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
-	
+
+	protected static final long LIMIT_TIME = 1000 * 60; // 1Î∂Ñ
+
 	public AutoScheduler(
 			AbstractAutoService abstractAutoService,
 			JobLauncher JobLauncher, 
@@ -31,14 +33,13 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 	}
 
 	@Scheduled(fixedDelay = 5000)
-	@AopAnnotation
+	@AopAnnotation(name = "auto-send", alone = true, deadLine = LIMIT_TIME)
 	@Override
 	public void scheduled(){
 		
 		final String pollKey = TimeBasedSequenceIdFactory.seq();
 		//final String pollKey = "1234";
-		
-		// ¿”Ω√ √≥∏Æ
+
 		List<AutoQueSchdDto> list = this.doScheduleList(pollKey);
 		
 		if (list == null)

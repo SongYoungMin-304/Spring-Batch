@@ -18,7 +18,7 @@ public class TemplateService {
 	
 	@Cacheable(cacheNames = "getRecordCompleteCache")
 	public TemplateInfo getTemplateInfo(long templateMsgId) {
-		log.info("Ä³½Ã È®ÀÎ"+templateMsgId);
+		//log.info("Ä³ï¿½ï¿½ È®ï¿½ï¿½"+templateMsgId);
 		return templateMsgInfoRepository.findByTemplateMsgId(templateMsgId);
 	}
 
