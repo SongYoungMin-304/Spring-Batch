@@ -12,3 +12,5 @@ Spring Batch 구현 및 기능 정의
 -2021.08.18 jms producer, comsume 처리 9
 
 -2021.09.12 ehcache 관련 처리 진행
+
+-2021.11.23 이중화 처리
