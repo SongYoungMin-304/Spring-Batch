@@ -2,11 +2,13 @@ package com.project.batch.config;
 
 import com.project.batch.config.annotation.AopAnnotation;
 import com.project.batch.core.lock.LockConfiguration;
+import com.project.batch.core.lock.StorageLockProvider;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,9 @@ public class LoggingAOP {
 		joinPoint.proceed();
 	}*/
 
+	@Autowired
+	private StorageLockProvider storageLockProvider;
+
 	protected String getClassAndMethodName(Method method) {
 		return new StringBuilder().append(method.getDeclaringClass().getSimpleName())
 				.append(".")
@@ -41,8 +46,10 @@ public class LoggingAOP {
 	}
 
 	@Around("execution(@com.project.batch.config.annotation.AopAnnotation * *(..))")
-	public void logging(final ProceedingJoinPoint joinPoint) throws Throwable {
+	public Object logging(final ProceedingJoinPoint joinPoint) throws Throwable {
 		log.info("aop Process"+joinPoint.getSignature());
+
+		Object proceed = null;
 
 		Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
 		AopAnnotation aopAnnotation = method.getAnnotation(AopAnnotation.class);
@@ -68,14 +75,21 @@ public class LoggingAOP {
 					, lockedBy
 					, (alone==true)?"1":"0");
 
+			log.info("TL={}",distributedLockName);
+
+			boolean lockYn = storageLockProvider.lock(lockConfiguration);
+
+			if(lockYn==false){
+				log.info("Lock Fail {} is already locked, This method {} is skip",method.getName());
+			}else{
+				proceed = joinPoint.proceed();
+				storageLockProvider.unlock(lockConfiguration);
+			}
+
 		} catch (Exception e){
-			log.error("This ");
+			log.error("Exception occur"+ e.toString());
 		}
 
-
-
-		//lockProvider.lock();
-
-		joinPoint.proceed();
+		return proceed;
 	}
 }

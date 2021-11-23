@@ -60,5 +60,26 @@ public class LockConfiguration {
         return who;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Instant getLockAtMostUntil() {
+        return createdAt.plus(lockAtMostFor);
+    }
+
+    public Instant getLockAtLeastUntil() {
+        return createdAt.plus(lockAtLeastFor);
+    }
+
+    /**
+     * Returns either now or lockAtLeastUntil whichever is later.
+     */
+    public Instant getUnlockTime() {
+        Instant now = Instant.now();
+        Instant lockAtLeastUntil = getLockAtLeastUntil();
+        return lockAtLeastUntil.isAfter(now) ? lockAtLeastUntil : now;
+    }
+
 
 }

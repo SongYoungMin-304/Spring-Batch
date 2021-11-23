@@ -4,6 +4,8 @@ import java.util.Optional;
 
 public interface LockProvider {
 
-    Optional<SimpleLock> lock(LockConfiguration lockConfiguration);
+    boolean lock(LockConfiguration lockConfiguration) throws Exception;
+
+    void unlock(LockConfiguration lockConfiguration);
 
 }
