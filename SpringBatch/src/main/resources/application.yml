@@ -2,7 +2,7 @@ spring:
   datasource:
     driverClassName: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@localhost:1521/orcl
-    username: test
+    username: system
     password: 1234
     platform: oracle
     hikari:
