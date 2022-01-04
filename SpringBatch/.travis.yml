@@ -1,0 +1,39 @@
+language: java
+jdk:
+  - openjdk8
+
+branches:
+  only:
+    - dev
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
+
+
+services:
+  - docker
+
+script:
+  - ./gradlew build
+
+  # GET NAME
+  - PRJ_GROUP=$(gradle properties -q | grep "group:" | awk '{print $2}')
+  - PRJ_NAME=$(gradle properties -q | grep "name:" | awk '{print $2}')
+  - PRJ_VERSION=$(gradle properties -q | grep "version:" | awk '{print $2}')
+
+  - echo "## PROJECT_GROUP - ${PRJ_GROUP}"
+  - echo "## PROJECT_NAME - ${PRJ_NAME}"
+  - echo "## PROJECT_VERSION - ${PRJ_VERSION}"
+
+  - PRJ_JAR=${PRJ_NAME}-${PRJ_VERSION}.jar
+
+  # DOCKER BUILD
+  - docker build -t ${PRJ_GROUP}.${PRJ_NAME}:latest --build-arg JAR_FILE=build/libs/${PRJ_JAR} ./
+
+  # PUSH TO DOCKER HUB
+  - docker login -u ${USER} -p ${PASSWORD}
+
+  - docker push songyoungmin/docker-spring-boot
