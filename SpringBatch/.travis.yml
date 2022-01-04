@@ -1,6 +1,6 @@
 language: java
 jdk:
-  - openjdk8
+  - C:/Program Files/Java/jdk1.8.0_261
 
 branches:
   only:
