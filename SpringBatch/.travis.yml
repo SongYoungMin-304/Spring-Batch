@@ -1,16 +1,16 @@
 language: java
 jdk:
-  - C:/Program Files/Java/jdk1.8.0_261
+  - openjdk8
 
 branches:
   only:
     - dev
 
 # Travis CI 서버의 Home
-#cache:
-#  directories:
-#    - '$HOME/.m2/repository'
-#    - '$HOME/.gradle'
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.gradle'
 
 script: "./gradlew clean build"
 
