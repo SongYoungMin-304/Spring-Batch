@@ -2,7 +2,7 @@ spring:
   datasource:
     driverClassName: oracle.jdbc.OracleDriver
     url: jdbc:oracle:thin:@localhost:1521/orcl
-    username: system
+    username: test
     password: 1234
     platform: oracle
     hikari:
@@ -21,5 +21,40 @@ spring:
   cache:
     jcache:
       config: classpath:ehcache.xml
+
+  quartz:
+        wait-for-jobs-to-complete-on-shutdown: true
+        job-store-type: jdbc
+        jdbc:
+          initialize-schema: always
+        properties:
+          org:
+            quartz:
+              scheduler:
+                instanceName: INTG-SMS
+                instanceId: SMS
+                skipUpdateCheck: true
+              #          jobStore:
+              #            class: org.quartz.simpl.RAMJobStore
+              jobStore:
+                class: org.quartz.impl.jdbcjobstore.JobStoreTX
+                driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+                useProperties: false
+                tablePrefix: QRTZ_
+                misfireThreshold: 60000
+                clusterCheckinInterval: 1000
+                isClustered: true
+              plugin:
+                shutdownhook:
+                  class: org.quartz.plugins.management.ShutdownHookPlugin
+                  cleanShutdown: true
+              threadPool:
+                class: org.quartz.simpl.SimpleThreadPool
+                threadCount: 20
+                threadPriority: 5
+                threadsInheritContextClassLoaderOfInitializingThread: true
+        overwrite-existing-jobs: true
+        auto-startup: true
+        startup-delay: 20000
       
  

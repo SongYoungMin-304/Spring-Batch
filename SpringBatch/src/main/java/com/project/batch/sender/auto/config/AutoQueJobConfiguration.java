@@ -33,8 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration
 @EnableBatchProcessing
 public class AutoQueJobConfiguration {
-	private static final String JOB_NAME = "autoQueInterfaceJob";
-	
+	public static final String JOB_NAME = "autoQueInterfaceJob";
+    public static final String JOB_DESC = "테스트 잡 처리 ";
+
 	@Value("${tms.integration.db.auto.chunk.size:100}")
 	private int chunkSize;
 	

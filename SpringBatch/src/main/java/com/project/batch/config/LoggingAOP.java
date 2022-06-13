@@ -1,3 +1,4 @@
+/*
 package com.project.batch.config;
 
 import com.project.batch.config.annotation.AopAnnotation;
@@ -29,11 +30,13 @@ public class LoggingAOP {
 	@Value("${distribute.max.mstime}")
 	protected static int MAX_UNTIL_TIME;
 	
-	/*@Around("execution(* com.project.batch.sender.auto.scheduler.AutoScheduler.scheduled(..))")
+	*/
+/*@Around("execution(* com.project.batch.sender.auto.scheduler.AutoScheduler.scheduled(..))")
 	public void logging(final ProceedingJoinPoint joinPoint) throws Throwable {
 		//log.info("aop Process"+joinPoint.getSignature());
 		joinPoint.proceed();
-	}*/
+	}*//*
+
 
 	@Autowired
 	private StorageLockProvider storageLockProvider;
@@ -93,3 +96,4 @@ public class LoggingAOP {
 		return proceed;
 	}
 }
+*/
