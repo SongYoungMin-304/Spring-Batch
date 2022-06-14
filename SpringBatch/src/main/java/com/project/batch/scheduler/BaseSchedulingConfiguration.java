@@ -1,7 +1,8 @@
-package com.project.batch.sender.auto.scheduler;
+package com.project.batch.scheduler;
 
-import com.project.batch.scheduler.AutoBaseCronJob;
+import com.project.batch.scheduler.BaseCronJob;
 import com.project.batch.sender.auto.config.AutoQueJobConfiguration;
+import com.project.batch.sender.auto.scheduler.AutoQuartzCrobJob;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -69,26 +70,15 @@ public class BaseSchedulingConfiguration {
     private void registAutoScheduler() throws SchedulerException {
 
         // scheduleAutoJobDetail 이라는 Job을 세팅
-        JobDetail schedulAutoJobDetail = buildJobDetail(
+        JobDetail autoJobDetail = buildJobDetail(
                 AutoQuartzCrobJob.class,
                 AutoQueJobConfiguration.JOB_NAME, //name
                 AutoQueJobConfiguration.JOB_DESC, //desc
                 new HashMap());
 
-        // Trigger 관련 세팅 진행
+        // autoSendEmailJobTrigger 이라는 Trigger 관련 세팅 진행
         Trigger autoSendEmailJobTrigger = cronJobTriggerBuilder("scheduleAutoTrigger",
                 "scheduleTrigger",
-                "3/5 * * * * ?").build();
-
-
-        JobDetail scheduleCreateEmailJobDetail = buildJobDetail(
-                AutoQuartzCrobJob.class,
-                "Create Auto schedule info", //name
-                "테스트 스케줄 생성", //desc
-                new HashMap()); //param
-
-        Trigger scheduleCreateEmailJobTrigger = cronJobTriggerBuilder("scheduleCreateEmailTrigger",
-                "scheduleCreate",
                 "3/5 * * * * ?").build();
 
    /*     if (!ChannelType.EMAIL.getCode().equals(TMSSystem.getProperty("channel.type"))) {
@@ -97,20 +87,12 @@ public class BaseSchedulingConfiguration {
             schedulerFactory.getScheduler().unscheduleJob(scheduleCreateEmailJobTrigger.getKey());
 
         } else {*/
-            // Job과 트리거를 설정,
-            if (!schedulerFactory.getScheduler().checkExists(schedulAutoJobDetail.getKey())) {
+            // Job과 트리거를 설정 등록 시킴
+            if (!schedulerFactory.getScheduler().checkExists(autoJobDetail.getKey())) {
                 schedulerFactory.getScheduler().scheduleJob(
-                        schedulAutoJobDetail,
+                        autoJobDetail,
                         autoSendEmailJobTrigger
                 );
             }
-
-            if (!schedulerFactory.getScheduler().checkExists(scheduleCreateEmailJobDetail.getKey())) {
-                schedulerFactory.getScheduler().scheduleJob(
-                        scheduleCreateEmailJobDetail,
-                        scheduleCreateEmailJobTrigger
-                );
-            }
-        //}
     }
 }
