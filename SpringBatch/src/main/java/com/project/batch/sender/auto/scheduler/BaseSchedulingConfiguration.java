@@ -12,6 +12,13 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * BaseSchedulingConfiguration.java
+ * Quartz-trigger Bean 등록 처리
+ * @author sym
+ *
+ */
 @Slf4j
 @RequiredArgsConstructor
 @Configuration
@@ -19,6 +26,12 @@ public class BaseSchedulingConfiguration {
 
     private final SchedulerFactoryBean schedulerFactory;
 
+    /**
+     * start
+     * Bean 이 올라갈때 실행
+     * @throws Excpetion
+     *
+     */
     @PostConstruct
     public void start() {
         log.info("JobController set..");
@@ -55,12 +68,14 @@ public class BaseSchedulingConfiguration {
 
     private void registAutoScheduler() throws SchedulerException {
 
+        // scheduleAutoJobDetail 이라는 Job을 세팅
         JobDetail schedulAutoJobDetail = buildJobDetail(
                 AutoQuartzCrobJob.class,
                 AutoQueJobConfiguration.JOB_NAME, //name
                 AutoQueJobConfiguration.JOB_DESC, //desc
                 new HashMap());
 
+        // Trigger 관련 세팅 진행
         Trigger autoSendEmailJobTrigger = cronJobTriggerBuilder("scheduleAutoTrigger",
                 "scheduleTrigger",
                 "3/5 * * * * ?").build();
