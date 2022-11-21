@@ -16,8 +16,9 @@ public class AutoQuartzCrobJob extends AutoBaseCronJob {
     public AutoQuartzCrobJob(Job autoQueInterfaceJob,
                                JobExplorer jobExplorer,
                                JobLauncher jobLauncher,
-                               AbstractAutoService abstractAutoService){
-        super(autoQueInterfaceJob, jobExplorer, jobLauncher, abstractAutoService);
+                               AbstractAutoService abstractAutoService,
+                               AutoScheduler autoScheduler){
+        super(autoQueInterfaceJob, jobExplorer, jobLauncher, abstractAutoService, autoScheduler);
     }
 
 }

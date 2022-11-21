@@ -63,7 +63,7 @@ public class BaseSchedulingConfiguration {
 
         Trigger autoSendEmailJobTrigger = cronJobTriggerBuilder("scheduleAutoTrigger",
                 "scheduleTrigger",
-                "3/5 * * * * ?").build();
+                "3 * * * * ?").build();
 
 
         JobDetail scheduleCreateEmailJobDetail = buildJobDetail(
@@ -74,7 +74,7 @@ public class BaseSchedulingConfiguration {
 
         Trigger scheduleCreateEmailJobTrigger = cronJobTriggerBuilder("scheduleCreateEmailTrigger",
                 "scheduleCreate",
-                "3/5 * * * * ?").build();
+                "3 * * * * ?").build();
 
    /*     if (!ChannelType.EMAIL.getCode().equals(TMSSystem.getProperty("channel.type"))) {
             log.info("unScheduleJob email");
@@ -90,12 +90,12 @@ public class BaseSchedulingConfiguration {
                 );
             }
 
-            if (!schedulerFactory.getScheduler().checkExists(scheduleCreateEmailJobDetail.getKey())) {
+/*            if (!schedulerFactory.getScheduler().checkExists(scheduleCreateEmailJobDetail.getKey())) {
                 schedulerFactory.getScheduler().scheduleJob(
                         scheduleCreateEmailJobDetail,
                         scheduleCreateEmailJobTrigger
                 );
-            }
+            }*/
         //}
     }
 }
