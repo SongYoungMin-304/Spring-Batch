@@ -47,6 +47,8 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
         return builder;
     }
 
+
+
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 

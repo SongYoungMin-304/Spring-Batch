@@ -66,36 +66,11 @@ public class BaseSchedulingConfiguration {
                 "3 * * * * ?").build();
 
 
-        JobDetail scheduleCreateEmailJobDetail = buildJobDetail(
-                AutoQuartzCrobJob.class,
-                "Create Auto schedule info", //name
-                "테스트 스케줄 생성", //desc
-                new HashMap()); //param
-
-        Trigger scheduleCreateEmailJobTrigger = cronJobTriggerBuilder("scheduleCreateEmailTrigger",
-                "scheduleCreate",
-                "3 * * * * ?").build();
-
-   /*     if (!ChannelType.EMAIL.getCode().equals(TMSSystem.getProperty("channel.type"))) {
-            log.info("unScheduleJob email");
-            schedulerFactory.getScheduler().unscheduleJob(scheduleSendEmailJobTrigger.getKey());
-            schedulerFactory.getScheduler().unscheduleJob(scheduleCreateEmailJobTrigger.getKey());
-
-        } else {*/
-            // Job과 트리거를 설정,
-            if (!schedulerFactory.getScheduler().checkExists(schedulAutoJobDetail.getKey())) {
+        if (!schedulerFactory.getScheduler().checkExists(schedulAutoJobDetail.getKey())) {
                 schedulerFactory.getScheduler().scheduleJob(
                         schedulAutoJobDetail,
                         autoSendEmailJobTrigger
                 );
-            }
-
-/*            if (!schedulerFactory.getScheduler().checkExists(scheduleCreateEmailJobDetail.getKey())) {
-                schedulerFactory.getScheduler().scheduleJob(
-                        scheduleCreateEmailJobDetail,
-                        scheduleCreateEmailJobTrigger
-                );
-            }*/
-        //}
+        }
     }
 }
