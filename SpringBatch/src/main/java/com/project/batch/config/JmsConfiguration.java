@@ -17,8 +17,7 @@ public class JmsConfiguration {
 	
 	@Value("${spring.activemq.broker-url}")
     private String brokerUrl;
-	
-	// 발송 처리
+
 	@Bean
 	public ActiveMQConnectionFactory senderActiveMQConnectionFactory() {
 		ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory();

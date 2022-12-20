@@ -25,7 +25,18 @@ public interface AutoQueRepository extends JpaRepository<AutoQueue, Long>{
         @Param("pollKey") String pollKey,
         @Param("limitCount") long limitCount
     );
-	
+
+	@Transactional
+	@Modifying(clearAutomatically = true)
+	@Query(value="update AutoQueue a set a.flag = 'Y' "+
+			" where 1 = 1 " +
+			" and a.flag = 'I' " +
+			" and a.pollKey = :pollKey " +
+			"")
+	int updateAutoQueue(
+			@Param("pollKey") String pollKey
+	);
+
 	@Query(value="select " +
 			" new com.project.batch.model.AutoQueSchdDto(coalesce(MIN(a.id),0), coalesce(MAX(a.id),0), " +
 			" a.pollKey )  " +

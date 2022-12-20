@@ -48,7 +48,7 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 		int updateSucc = abstractAutoService.updatePollKey(pollKey);
 
 		if (updateSucc == 0) {
-			log.debug("There is no Scheduler");
+			log.info("There is no Scheduler");
 			return null;
 		}
 		
@@ -58,8 +58,8 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 	public void execute(T scheduleInfo, String pollKey) {
 
 		try {
-			sender.send("Hello Spring JMS ActiveMQ!");
-			
+			// MQ Sender
+			//sender.send("Hello Spring JMS ActiveMQ!");
 			JobLauncher.run(jobName, this.makeJobParameters(pollKey, scheduleInfo));
 		} catch (Exception e) {
 			log.error("job launch failed ", e);

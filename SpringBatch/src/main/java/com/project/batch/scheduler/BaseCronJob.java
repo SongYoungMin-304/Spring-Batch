@@ -1,7 +1,9 @@
 package com.project.batch.scheduler;
 
 import com.project.batch.core.contstants.JobParamConstrants;
+import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 import com.project.batch.model.AutoQueSchdDto;
+import com.project.batch.sender.auto.scheduler.AutoScheduler;
 import com.project.batch.sender.auto.scheduler.service.AbstractAutoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
     protected final JobExplorer jobExplorer;
     protected final JobLauncher jobLauncher;
     protected final AbstractAutoService autoBaseScheduleService;
+    protected final AutoScheduler autoScheduler;
 
 
     protected ArrayBlockingQueue<Map> taskQueue = new ArrayBlockingQueue<Map>(1000);
@@ -52,7 +55,11 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 
-        jobKey = context.getJobDetail().getKey();
+        log.info("test송");
+
+        autoScheduler.scheduled();
+
+        /*jobKey = context.getJobDetail().getKey();
 
         log.debug("executeInternal invoked, jobName:{}, jobKey: {}, time:{}",
                 job.getName(),
@@ -67,7 +74,7 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
             jobLauncher.run(job, jobParameters);
         } catch (Exception e){
 
-        }
+        }*/
        /* if (taskQueue.isEmpty()) {
             List<Map<String, Object>> list = autoBaseScheduleService.getScheduleList();
 

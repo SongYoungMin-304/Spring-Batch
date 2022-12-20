@@ -24,7 +24,7 @@ public abstract class AutoBaseCronJob extends QuartzJobBean implements Interrupt
     protected final JobExplorer jobExplorer;
     protected final JobLauncher jobLauncher;
     protected final AbstractAutoService autoBaseScheduleService;
-    protected final AutoScheduler autoScheduler;
+    //protected final AutoScheduler autoScheduler;
 
 
     @Override
@@ -35,7 +35,7 @@ public abstract class AutoBaseCronJob extends QuartzJobBean implements Interrupt
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 
-        autoScheduler.scheduled();
+        //autoScheduler.scheduled();
 
         log.info("일단테스트");
     }

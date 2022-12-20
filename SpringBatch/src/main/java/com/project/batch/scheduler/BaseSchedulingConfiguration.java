@@ -63,7 +63,7 @@ public class BaseSchedulingConfiguration {
 
         Trigger autoSendEmailJobTrigger = cronJobTriggerBuilder("scheduleAutoTrigger",
                 "scheduleTrigger",
-                "3 * * * * ?").build();
+                "3/5 * * * * ?").build();
 
 
         if (!schedulerFactory.getScheduler().checkExists(schedulAutoJobDetail.getKey())) {

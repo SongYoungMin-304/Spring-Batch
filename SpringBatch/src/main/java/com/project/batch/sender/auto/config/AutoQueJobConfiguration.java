@@ -99,7 +99,9 @@ public class AutoQueJobConfiguration {
         SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
         queryProvider.setDataSource(dataSource);
         queryProvider.setSelectClause("SELECT " +
-        		"Q.QUEUE_ID queueId" +
+        		"Q.QUEUE_ID queueId," +
+                "Q.POLL_KEY pollKey," +
+                "Q.FLAG flag" +
                 "");
         queryProvider.setFromClause("FROM AUTO_QUEUE Q " +
                 "");
