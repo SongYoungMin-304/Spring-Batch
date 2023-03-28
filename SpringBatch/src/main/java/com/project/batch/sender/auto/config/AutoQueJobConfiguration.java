@@ -27,6 +27,7 @@ import com.project.batch.model.AutoQueDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,8 +37,8 @@ public class AutoQueJobConfiguration {
 	public static final String JOB_NAME = "autoQueInterfaceJob";
     public static final String JOB_DESC = "테스트 잡 처리 ";
 
-	@Value("${tms.integration.db.auto.chunk.size:100}")
-	private int chunkSize;
+	//@Value("${tms.integration.db.auto.chunk.size:100}")
+	private int chunkSize = 5;
 	
 	private final DataSource dataSource;
     private final JobBuilderFactory jobBuilderFactory;
@@ -56,7 +57,7 @@ public class AutoQueJobConfiguration {
     }
 	@Bean(name="autoQueSendStep")
     public Step autoSendStep(
-            @Value("${auto.throttle.limit}") int throttleLimit,
+            @Value("${auto.throttle.limit}00") int throttleLimit,
             AutoQueProcessor autoQueProcessor,
             AutoQueItemWriter autoQueItemWriter) throws Exception {
 
@@ -65,7 +66,8 @@ public class AutoQueJobConfiguration {
                 .reader(autoQueItemReader(null,null,null))
                 .processor(autoQueProcessor)
                 .writer(autoQueItemWriter)
-                .throttleLimit(throttleLimit)
+                .taskExecutor(taskExecutor())
+                .throttleLimit(1)
                 //.taskExecutor(dbIntegrationBatchThreadPool)
                 .build();
     }
@@ -83,7 +85,7 @@ public class AutoQueJobConfiguration {
         parameterValues.put("pollKey", pollKey);
 
         return new JdbcPagingItemReaderBuilder<AutoQueDto>()
-                .pageSize(chunkSize)
+                .pageSize(1)
                 .fetchSize(chunkSize)
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(AutoQueDto.class))
@@ -110,10 +112,19 @@ public class AutoQueJobConfiguration {
         		" AND Q.QUEUE_ID BETWEEN :minSeq AND :maxSeq");
 
         Map<String, Order> sortKeys = new HashMap<>();
-        sortKeys.put("queueId", Order.ASCENDING);
+        sortKeys.put("QUEUE_ID", Order.ASCENDING);
         queryProvider.setSortKeys(sortKeys);
 
         return queryProvider.getObject();
+    }
+
+    @Bean
+    public TaskExecutor taskExecutor(){
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(4);
+        executor.setMaxPoolSize(8);
+        executor.setThreadNamePrefix("async-thread-");
+        return executor;
     }
 
 }

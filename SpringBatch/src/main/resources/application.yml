@@ -1,10 +1,9 @@
 spring:
   datasource:
-    driverClassName: oracle.jdbc.OracleDriver
-    url: jdbc:oracle:thin:@localhost:1521/orcl
-    username: test
-    password: 1234
-    platform: oracle
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:recruitTest
+    username: sa
+    password:
     hikari:
       maximum-pool-size: 30
       minimum-idle: 30
@@ -12,12 +11,13 @@ spring:
       max-lifetime: 420000
       connection-timeout: 10000
       validation-timeout: 10000
-      
+
+
   activemq:
     broker-url: tcp://127.0.0.1:61616?jms.useAsyncSend=true&wireFormat.tightEncodingEnabled=false
     user: admin
     password: admin
-    
+
   cache:
     jcache:
       config: classpath:ehcache.xml
@@ -56,5 +56,8 @@ spring:
         overwrite-existing-jobs: true
         auto-startup: true
         startup-delay: 20000
-      
- 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+

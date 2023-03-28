@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Receiver {
 
-    @JmsListener(destination = "helloworld.q",
+/*    @JmsListener(destination = "helloworld.q",
     		containerFactory = "customConnectionFactory")
     public void receive(String message) {
         log.info("received message='{}'", message);
@@ -17,6 +17,6 @@ public class Receiver {
     		containerFactory = "customConnectionFactory")
     public void timereceive(String message) {
         log.info("received message='{}'", message);
-    }
+    }*/
 
 }

@@ -2,9 +2,7 @@ package com.project.batch.domain;
 
 import java.io.Serializable;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AutoQueue implements Serializable{
 	
 	 @Id
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private long queueId;
 	 
 	 private String pollKey;

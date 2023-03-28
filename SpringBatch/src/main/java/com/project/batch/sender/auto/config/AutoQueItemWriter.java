@@ -28,9 +28,11 @@ public class AutoQueItemWriter extends DefaultQueWriter<AutoQueDto>{
 	public void write(List<? extends AutoQueDto> items) throws Exception {
 		// TODO Auto-generated method stub
 
+		log.info("사이즈 체크" + items.size());
+
 		for(AutoQueDto autoQueDto : items){
 			log.info("테스트"+autoQueDto.toString());
-			autoQueRepository.updateAutoQueue(autoQueDto.getPollKey());
+			autoQueRepository.updateAutoQueue(autoQueDto.getPollKey(), autoQueDto.getQueueId());
 		}
 
 		log.info("check Writer");

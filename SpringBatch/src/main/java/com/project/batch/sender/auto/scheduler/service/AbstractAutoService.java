@@ -33,7 +33,7 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	   	 String nowDateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateTimeFormat));
 	     String twoHourAgoDateStr = LocalDateTime.now().minusDays(maxMsgExpiredDays)
 	         .format(DateTimeFormatter.ofPattern(dateTimeFormat));
-	     return autoQueRepository.updatePreAutoQueue(pollKey, 1000);
+	     return autoQueRepository.updatePreAutoQueue(pollKey);
 	}
 	
 	public List<AutoQueSchdDto> getScheduleList(String pollKey){

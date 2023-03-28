@@ -19,11 +19,10 @@ public interface AutoQueRepository extends JpaRepository<AutoQueue, Long>{
 	@Query(value="update AutoQueue a set a.flag = 'I', a.pollKey = :pollKey " +
 			" where 1 = 1 " +
 			" and a.flag = 'N' " +
-			" and a.queueId <= :limitCount " +
+			" and a.pollKey IS NULL" +
 			"")
 	int updatePreAutoQueue(
-        @Param("pollKey") String pollKey,
-        @Param("limitCount") long limitCount
+        @Param("pollKey") String pollKey
     );
 
 	@Transactional
@@ -32,9 +31,11 @@ public interface AutoQueRepository extends JpaRepository<AutoQueue, Long>{
 			" where 1 = 1 " +
 			" and a.flag = 'I' " +
 			" and a.pollKey = :pollKey " +
+			" and a.queueId = :queueId " +
 			"")
 	int updateAutoQueue(
-			@Param("pollKey") String pollKey
+			@Param("pollKey") String pollKey,
+			@Param("queueId") long queueId
 	);
 
 	@Query(value="select " +

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Slf4j
 public class Sender {
 
-    @Autowired
+   /* @Autowired
     private JmsTemplate jmsTemplate;
     
     @Autowired
@@ -27,5 +27,5 @@ public class Sender {
     public void timesend() {
         log.info("sending message='{}'", "Current Date & Time is :"+LocalDateTime.now());
         jmsTemplate.convertAndSend("time-queue","Current Date & Time is :"+ LocalDateTime.now());
-    }
+    }*/
 }
