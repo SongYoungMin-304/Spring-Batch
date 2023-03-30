@@ -67,7 +67,7 @@ public class AutoQueJobConfiguration {
                 .processor(autoQueProcessor)
                 .writer(autoQueItemWriter)
                 .taskExecutor(taskExecutor())
-                .throttleLimit(1)
+                .throttleLimit(8)
                 //.taskExecutor(dbIntegrationBatchThreadPool)
                 .build();
     }
@@ -86,7 +86,7 @@ public class AutoQueJobConfiguration {
 
         return new JdbcPagingItemReaderBuilder<AutoQueDto>()
                 .pageSize(1)
-                .fetchSize(chunkSize)
+                .fetchSize(1)
                 .dataSource(dataSource)
                 .rowMapper(new BeanPropertyRowMapper<>(AutoQueDto.class))
                 .queryProvider(autoQueCreateQueryProvider())
@@ -121,7 +121,7 @@ public class AutoQueJobConfiguration {
     @Bean
     public TaskExecutor taskExecutor(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(4);
+        executor.setCorePoolSize(8);
         executor.setMaxPoolSize(8);
         executor.setThreadNamePrefix("async-thread-");
         return executor;

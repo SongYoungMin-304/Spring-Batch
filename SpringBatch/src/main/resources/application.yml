@@ -18,6 +18,10 @@ spring:
     user: admin
     password: admin
 
+  batch:
+    job:
+      enabled: false
+
   cache:
     jcache:
       config: classpath:ehcache.xml

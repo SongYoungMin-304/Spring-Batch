@@ -60,6 +60,7 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 		try {
 			// MQ Sender
 			//sender.send("Hello Spring JMS ActiveMQ!");
+			log.info("이게 돌았는가..");
 			JobLauncher.run(jobName, this.makeJobParameters(pollKey, scheduleInfo));
 		} catch (Exception e) {
 			log.error("job launch failed ", e);

@@ -36,8 +36,9 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 		super(abstractAutoService, JobLauncher, autoQueInterfaceJob, templateService);
 	}
 
-	//@Scheduled(fixedDelay = 5000)
+	//@Scheduled(fixedDelay = 5000, cron = "1 * * * * *")
 	//@AopAnnotation(name = "auto-send", alone = true, deadLine = LIMIT_TIME)
+	@Scheduled(cron = "30 * * * * *")
 	@Override
 	public void scheduled(){
 
