@@ -11,11 +11,17 @@ import org.quartz.*;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -42,22 +48,52 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
         isInterrupted = true;
     }
 
-    public JobParametersBuilder makeJobParameters() {
-
-        final JobParametersBuilder builder = new JobParametersBuilder()
-                .addString(JobParamConstrants.RUN_TIME, LocalDateTime.now().toString());
-
-        return builder;
+    public JobParameters makeJobParameters(String pollKey, AutoQueSchdDto queDto) {
+        return new JobParametersBuilder()
+                .addString(JobParamConstrants.RUN_TIME, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS").format(new Date()))
+                .addString(JobParamConstrants.SCHEDULE_ID, queDto.getScheduledId())
+                .addLong(JobParamConstrants.MIN_SEQ, queDto.getMinSeq())
+                .addLong(JobParamConstrants.MAX_SEQ, queDto.getMaxSeq())
+                .addString(JobParamConstrants.POLL_KEY, pollKey)
+                .toJobParameters();
     }
-
 
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 
-        log.info("test송");
+        log.info("테스트 영민");
 
-        autoScheduler.scheduled();
+        final String pollKey = TimeBasedSequenceIdFactory.seq();
+
+        int updateSucc = autoBaseScheduleService.updatePollKey(pollKey);
+
+        if (updateSucc == 0) {
+            log.info("There is no Scheduler");
+            return;
+        }
+
+        List<AutoQueSchdDto> scheduleList = autoBaseScheduleService.getScheduleList(pollKey);
+
+        if (scheduleList == null)
+            return;
+
+        for(AutoQueSchdDto dto : scheduleList) {
+            try {
+                jobLauncher.run(job, this.makeJobParameters(pollKey, dto));
+            } catch (JobExecutionAlreadyRunningException e) {
+                e.printStackTrace();
+            } catch (JobRestartException e) {
+                e.printStackTrace();
+            } catch (JobInstanceAlreadyCompleteException e) {
+                e.printStackTrace();
+            } catch (JobParametersInvalidException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        //autoScheduler.scheduled();
 
         /*jobKey = context.getJobDetail().getKey();
 

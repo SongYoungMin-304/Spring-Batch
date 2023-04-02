@@ -1,3 +1,4 @@
+/*
 package com.project.batch.scheduler;
 
 import com.project.batch.core.util.TimeBasedSequenceIdFactory;
@@ -34,9 +35,6 @@ public abstract class AutoBaseCronJob extends QuartzJobBean implements Interrupt
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-
-        //autoScheduler.scheduled();
-
-        log.info("일단테스트");
     }
 }
+*/
