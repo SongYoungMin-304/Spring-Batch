@@ -3,6 +3,8 @@ package com.project.batch.sender.auto.scheduler.service;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -21,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	
 	private final AutoQueRepository autoQueRepository;
-	
-	
+
+	private Map<String, Boolean> scheduleHashMap = new ConcurrentHashMap<>();
 	
 	private final String dateTimeFormat = "yyyyMMddHHmmss";
 	
@@ -61,6 +63,10 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	@Override
 	public void setRunning(String scheduleId, boolean isRun) {
 		// TODO Auto-generated method stub
-		
+		if (isRun) {
+			this.scheduleHashMap.put(scheduleId, true);
+		} else {
+			this.scheduleHashMap.remove(scheduleId);
+		}
 	}
 }

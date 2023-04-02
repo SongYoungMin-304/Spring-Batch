@@ -20,6 +20,8 @@ public class AutoQueJobListener implements JobExecutionListener{
 	
 	@Override
 	public void beforeJob(JobExecution jobExecution) {
+		scheduleId = jobExecution.getJobParameters().getString("schedule.id");
+		abstractAutoService.setRunning(scheduleId, true);
 	}
 	
 	@Override

@@ -1,6 +1,5 @@
 package com.project.batch.sender.auto.scheduler;
 
-import com.project.batch.scheduler.AutoBaseCronJob;
 import com.project.batch.sender.auto.config.AutoQueJobConfiguration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

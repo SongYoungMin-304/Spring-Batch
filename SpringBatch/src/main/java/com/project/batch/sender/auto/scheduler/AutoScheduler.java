@@ -1,3 +1,4 @@
+/*
 package com.project.batch.sender.auto.scheduler;
 
 import java.util.List;
@@ -16,10 +17,12 @@ import com.project.batch.sender.auto.scheduler.service.TemplateService;
 
 import lombok.extern.slf4j.Slf4j;
 
+*/
 /*
  * scheduler 대신 quartzTrigger을 사용하기 위한 조치
  *
- */
+ *//*
+
 @Slf4j
 @Component
 //@ConditionalOnProperty(name = "auto.enabled", havingValue = "true")
@@ -59,3 +62,4 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 	}
 
 }
+*/

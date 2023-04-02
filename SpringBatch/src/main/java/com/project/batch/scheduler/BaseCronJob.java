@@ -3,7 +3,6 @@ package com.project.batch.scheduler;
 import com.project.batch.core.contstants.JobParamConstrants;
 import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 import com.project.batch.model.AutoQueSchdDto;
-import com.project.batch.sender.auto.scheduler.AutoScheduler;
 import com.project.batch.sender.auto.scheduler.service.AbstractAutoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,6 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +35,7 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
     protected final JobExplorer jobExplorer;
     protected final JobLauncher jobLauncher;
     protected final AbstractAutoService autoBaseScheduleService;
-    protected final AutoScheduler autoScheduler;
+    //protected final AutoScheduler autoScheduler;
 
 
     protected ArrayBlockingQueue<Map> taskQueue = new ArrayBlockingQueue<Map>(1000);
@@ -80,6 +78,7 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
 
         for(AutoQueSchdDto dto : scheduleList) {
             try {
+                log.info("송영민송송송"+dto.toString());
                 jobLauncher.run(job, this.makeJobParameters(pollKey, dto));
             } catch (JobExecutionAlreadyRunningException e) {
                 e.printStackTrace();

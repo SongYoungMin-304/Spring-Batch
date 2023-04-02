@@ -1,3 +1,4 @@
+/*
 package com.project.batch.sender.auto.scheduler;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +65,7 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 			JobLauncher.run(jobName, this.makeJobParameters(pollKey, scheduleInfo));
 		} catch (Exception e) {
 			log.error("job launch failed ", e);
-			this.abstractAutoService.setRunning(scheduleInfo.getScheduledId(), false);
+			//this.abstractAutoService.setRunning(scheduleInfo.getScheduledId(), false);
 		}
 	} // end for loop
 	
@@ -79,3 +80,4 @@ public abstract class AbstractAutoScheduler<T extends AutoQueSchdDto> implements
 	}
 
 }
+*/
