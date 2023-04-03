@@ -21,5 +21,7 @@ public class AutoQueue implements Serializable{
 	 private String pollKey;
 	 private String flag;
 	 private String queueName;
+	 private String templateMsgId;
+	 
 
 }

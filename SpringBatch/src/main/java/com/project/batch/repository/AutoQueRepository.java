@@ -20,9 +20,11 @@ public interface AutoQueRepository extends JpaRepository<AutoQueue, Long>{
 			" where 1 = 1 " +
 			" and a.flag = 'N' " +
 			" and a.pollKey IS NULL" +
+			" and a.templateMsgId = :templateMsgId" +
 			"")
 	int updatePreAutoQueue(
-        @Param("pollKey") String pollKey
+        @Param("pollKey") String pollKey,
+		@Param("templateMsgId") String templateMsgId
     );
 
 	@Transactional
@@ -40,11 +42,18 @@ public interface AutoQueRepository extends JpaRepository<AutoQueue, Long>{
 
 	@Query(value="select " +
 			" new com.project.batch.model.AutoQueSchdDto(coalesce(MIN(a.id),0), coalesce(MAX(a.id),0), " +
-			" a.pollKey )  " +
+			" a.pollKey, " +
+			" a.templateMsgId " +
+			")  " +
 			" from AutoQueue a" +
 			" where a.flag = 'I' and a.pollKey = :pollKey" +
 			" group by a.pollKey" +
 			"")
 	List<AutoQueSchdDto> findBySchdByPollKey(
         @Param("pollKey") String pollKey);
+
+	@Query(value="select distinct a.templateMsgId" +
+			" from AutoQueue a" +
+			" where a.flag = 'N' and a.pollKey IS NULL")
+	List<String> findlist();
 }

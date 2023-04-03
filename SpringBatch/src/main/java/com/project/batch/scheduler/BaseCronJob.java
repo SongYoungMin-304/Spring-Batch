@@ -60,76 +60,41 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 
-        log.info("테스트 영민");
+        List<String> templateMsgIdList = autoBaseScheduleService.getTemplateMsgId();
 
-        final String pollKey = TimeBasedSequenceIdFactory.seq();
+        for (String templateMsgId : templateMsgIdList) {
 
-        int updateSucc = autoBaseScheduleService.updatePollKey(pollKey);
+            if(!autoBaseScheduleService.isRunning(templateMsgId)){
+                final String pollKey = TimeBasedSequenceIdFactory.seq();
 
-        if (updateSucc == 0) {
-            log.info("There is no Scheduler");
-            return;
-        }
+                int updateSucc = autoBaseScheduleService.updatePollKey(pollKey, templateMsgId);
 
-        List<AutoQueSchdDto> scheduleList = autoBaseScheduleService.getScheduleList(pollKey);
-
-        if (scheduleList == null)
-            return;
-
-        for(AutoQueSchdDto dto : scheduleList) {
-            try {
-                log.info("송영민송송송"+dto.toString());
-                jobLauncher.run(job, this.makeJobParameters(pollKey, dto));
-            } catch (JobExecutionAlreadyRunningException e) {
-                e.printStackTrace();
-            } catch (JobRestartException e) {
-                e.printStackTrace();
-            } catch (JobInstanceAlreadyCompleteException e) {
-                e.printStackTrace();
-            } catch (JobParametersInvalidException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-        //autoScheduler.scheduled();
-
-        /*jobKey = context.getJobDetail().getKey();
-
-        log.debug("executeInternal invoked, jobName:{}, jobKey: {}, time:{}",
-                job.getName(),
-                jobKey, LocalDateTime.now().toString());
-
-        if (isInterrupted) {
-            log.warn("jobKey: {} is Interrupted.", jobKey);
-            return;
-        }
-        try {
-            final JobParameters jobParameters = this.makeJobParameters().toJobParameters();
-            jobLauncher.run(job, jobParameters);
-        } catch (Exception e){
-
-        }*/
-       /* if (taskQueue.isEmpty()) {
-            List<Map<String, Object>> list = autoBaseScheduleService.getScheduleList();
-
-            list.forEach(map -> {
-                if (map == null) {
+                if (updateSucc == 0) {
+                    log.info("There is no Scheduler");
                     return;
                 }
 
-                final String jobScheduleId = map.get("JOB_SCHEDULE_ID").toString();
+                List<AutoQueSchdDto> scheduleList = autoBaseScheduleService.getScheduleList(pollKey);
 
+                if (scheduleList == null)
+                    return;
 
-
-                try {
-                    log.info("job launch [jobKey:{}, scheduleId:{}]", jobKey, jobScheduleId);
-                    this.autoBaseScheduleService.registSchedule(jobScheduleId, map);
-
-                } catch (Exception e) {
-                            this.autoBaseScheduleService.unRegistSchedule(jobScheduleId);
-                            log.error("auto job JobExecutionAlreadyRunningException", e);
+                for(AutoQueSchdDto dto : scheduleList) {
+                    try {
+                            jobLauncher.run(job, this.makeJobParameters(pollKey, dto));
+                    } catch (JobExecutionAlreadyRunningException e) {
+                        e.printStackTrace();
+                    } catch (JobRestartException e) {
+                        e.printStackTrace();
+                    } catch (JobInstanceAlreadyCompleteException e) {
+                        e.printStackTrace();
+                    } catch (JobParametersInvalidException e) {
+                        e.printStackTrace();
+                    }
                 }
-            });*/
+            }else{
+                log.info("this job is already runnging {}", templateMsgId);
+            }
+        }
     }
 }

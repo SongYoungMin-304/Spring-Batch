@@ -31,33 +31,36 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	@Value("${max.msg.expire.days}")
     private int maxMsgExpiredDays;
 	
-	public int updatePollKey(String pollKey) {
+	public int updatePollKey(String pollKey, String templateMsgId) {
 	   	 String nowDateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateTimeFormat));
 	     String twoHourAgoDateStr = LocalDateTime.now().minusDays(maxMsgExpiredDays)
 	         .format(DateTimeFormatter.ofPattern(dateTimeFormat));
-	     return autoQueRepository.updatePreAutoQueue(pollKey);
+	     return autoQueRepository.updatePreAutoQueue(pollKey, templateMsgId);
 	}
-	
+
+	@Override
+	public List<AutoQueSchdDto> getScheduleList() {
+		return null;
+	}
+
 	public List<AutoQueSchdDto> getScheduleList(String pollKey){
 		return autoQueRepository.findBySchdByPollKey(pollKey);
 	}
 
 	@Override
-	public List<AutoQueSchdDto> getScheduleList() {
+	public List<String> getTemplateMsgId() {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AutoQueSchdDto getScheduleInfo(String scheduleId) {
-		// TODO Auto-generated method stub
-		return null;
+		return autoQueRepository.findlist();
 	}
 
 	@Override
 	public boolean isRunning(String scheduleId) {
-		// TODO Auto-generated method stub
-		return false;
+		Boolean isRun = this.scheduleHashMap.get(scheduleId);
+		if(isRun == null){
+			return false;
+		}else{
+			return isRun;
+		}
 	}
 
 	@Override

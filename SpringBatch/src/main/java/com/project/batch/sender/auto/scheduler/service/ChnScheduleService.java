@@ -7,11 +7,11 @@ public interface ChnScheduleService<T> {
 
 	List<T> getScheduleList(String pollKey);
 
-	T getScheduleInfo(String scheduleId);
+	List<String> getTemplateMsgId();
 
 	boolean isRunning(String scheduleId);
 
 	void setRunning(String scheduleId, boolean isRun);
 
-	int updatePollKey(String pollKey);
+	int updatePollKey(String pollKey, String templateMsgId);
 }

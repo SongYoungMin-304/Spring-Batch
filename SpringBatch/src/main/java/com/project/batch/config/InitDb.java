@@ -35,6 +35,7 @@ public class InitDb {
                 AutoQueue autoQueue = new AutoQueue();
                 autoQueue.setQueueName("queue네임");
                 autoQueue.setFlag("N");
+                autoQueue.setTemplateMsgId("ABCD");
 
                 em.persist(autoQueue);
             }
