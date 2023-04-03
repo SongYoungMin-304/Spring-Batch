@@ -445,3 +445,203 @@ public TaskExecutor taskExecutor(){
 3. chunk size를 통해서 list에 담을 데이터 사이즈 조절
 
 - 대량 업데이트 시에는 batchUpdate 등을 사용하는 게 좋은 데 해당 경우에 처리할 갯수를 정해줌으로써 속도에 이점을 가질 수 있다.
+
+
+# Quartz trigger
+
+Quartz-trigger 이란? 
+
+Job Scheduling 라이브러리입니다. 간단한 interval 형식이나 Cron 표현식으로 복잡한 스케줄링도 지원합니다.
+
+장점
+
+1) db 기반으로 스케줄러 간의 Clustering 기능을 제공한다. 
+ - 시스템 Fail-over 와 Random 방식의 로드 분산처리를 지원한다.
+
+2) In-memory Job Scheduler 도 제공한다.
+
+단점
+
+1) Clustering 기능을 제공하지만, 단순한 random 방식이라서 완벽한 Cluster 간의 로드 분산은 안된다.
+
+2) 어드민 UI를 제공하지 않는다.
+
+3) 스케줄링 실행에 대한 History 는 보관하지 않는다.
+
+4) Fixed Delay 타입을 보장하지 않는다.
+
+참조) 
+
+[Quartz Job Scheduler란?](https://advenoh.tistory.com/51)
+
+**이중화 클러스트링에 대해서 사용하기 위한 Quartz-trigger + Spring batch를 사용**
+
+**1) QuartzTrigger bean 등록**
+
+ 
+
+```java
+@RequiredArgsConstructor
+@Configuration
+public class BaseSchedulingConfiguration {
+
+     private final ScheduleFactoryBean scheduleFactory;
+
+     @PostConstruct
+     public void start() {
+        log.info("JobController set..");
+        try{
+            registAutoScheduler();
+        }catch (Exception e) {
+            log.error("SchedulerException", e);
+        }
+     }
+```
+
+```java
+private void registAutoScheduler() throws SchedulerException {
+
+        JobDetail schedulAutoJobDetail = buildJobDetail(
+                AutoQuartzCrobJob.class,
+                AutoQueJobConfiguration.JOB_NAME, //name
+                AutoQueJobConfiguration.JOB_DESC, //desc
+                new HashMap());
+
+        Trigger autoSendEmailJobTrigger = cronJobTriggerBuilder("scheduleAutoTrigger",
+                "scheduleTrigger",
+                "3/5 * * * * ?").build();
+
+        if (!schedulerFactory.getScheduler().checkExists(schedulAutoJobDetail.getKey())) {
+                schedulerFactory.getScheduler().scheduleJob(
+                        schedulAutoJobDetail,
+                        autoSendEmailJobTrigger
+                );
+        }
+    }
+```
+
+```java
+// *  *   *   *   *   *     *
+    //초  분  시  일  월  요일  년도(생략가능)
+    public TriggerBuilder cronJobTriggerBuilder(String triggerName,
+                                                String triggerGroup,
+                                                String scheduleExp) {
+
+        return TriggerBuilder.newTrigger()
+                .withIdentity(triggerName, triggerGroup)
+                .withSchedule(CronScheduleBuilder.cronSchedule(scheduleExp))
+                ;
+    }
+
+    public JobDetail buildJobDetail(Class job, String name, String desc, Map params) {
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.putAll(params);
+        return JobBuilder
+                .newJob(job)
+                .withIdentity(name)
+                .withDescription(desc)
+                .usingJobData(jobDataMap)
+                .build();
+    }
+```
+
+→ AutoQuartzCrobJob 에다가 Trigger 를 적용 시켜서 사의
+
+**2) AutoQuartzCrobJob bean 등록**
+
+```java
+@Component
+public class AutoQuartzCrobJob extends BaseCronJob {
+
+    public AutoQuartzCrobJob(Job autoQueInterfaceJob,
+                               JobExplorer jobExplorer,
+                               JobLauncher jobLauncher,
+                               AbstractAutoService abstractAutoService){
+        super(autoQueInterfaceJob, jobExplorer, jobLauncher, abstractAutoService);
+    }
+```
+
+```java
+@Override
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+
+        List<String> templateMsgIdList = autoBaseScheduleService.getTemplateMsgId();
+
+        for (String templateMsgId : templateMsgIdList) {
+
+            if(!autoBaseScheduleService.isRunning(templateMsgId)){
+                final String pollKey = TimeBasedSequenceIdFactory.seq();
+
+                int updateSucc = autoBaseScheduleService.updatePollKey(pollKey, templateMsgId);
+
+                if (updateSucc == 0) {
+                    log.info("There is no Scheduler");
+                    return;
+                }
+
+                List<AutoQueSchdDto> scheduleList = autoBaseScheduleService.getScheduleList(pollKey);
+
+                if (scheduleList == null)
+                    return;
+
+                for(AutoQueSchdDto dto : scheduleList) {
+                    try {
+                            jobLauncher.run(job, this.makeJobParameters(pollKey, dto));
+                    } catch (JobExecutionAlreadyRunningException e) {
+                        e.printStackTrace();
+                    } catch (JobRestartException e) {
+                        e.printStackTrace();
+                    } catch (JobInstanceAlreadyCompleteException e) {
+                        e.printStackTrace();
+                    } catch (JobParametersInvalidException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }else{
+                log.info("this job is already runnging {}", templateMsgId);
+            }
+        }
+    }
+```
+
+1) templateMsgId 가져와서 중복 잡 체크를 진행해서 job을 실행함(중복 job 키 값 : templateMsgId)
+
+```java
+@Override
+	public boolean isRunning(String scheduleId) {
+		Boolean isRun = this.scheduleHashMap.get(scheduleId);
+		if(isRun == null){
+			return false;
+		}else{
+			return isRun;
+		}
+	}
+```
+
+2) listener 를 통해서 잡 실행 중 체크(끝나면 종료)
+
+```java
+@Override
+	public void beforeJob(JobExecution jobExecution) {
+		scheduleId = jobExecution.getJobParameters().getString("schedule.id");
+		abstractAutoService.setRunning(scheduleId, true);
+	}
+	
+	@Override
+	public void afterJob(JobExecution jobExecution) {
+		scheduleId = jobExecution.getJobParameters().getString("schedule.id");
+		abstractAutoService.setRunning(scheduleId, false);
+	}
+```
+
+```java
+@Override
+	public void setRunning(String scheduleId, boolean isRun) {
+		// TODO Auto-generated method stub
+		if (isRun) {
+			this.scheduleHashMap.put(scheduleId, true);
+		} else {
+			this.scheduleHashMap.remove(scheduleId);
+		}
+	}
+```
