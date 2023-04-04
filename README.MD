@@ -645,3 +645,5 @@ public class AutoQuartzCrobJob extends BaseCronJob {
 		}
 	}
 ```
+
+-> 해당 작업을 통해서 같은 templateMsgId를 가진 Job은 실행이 안되도록 제약 처리
