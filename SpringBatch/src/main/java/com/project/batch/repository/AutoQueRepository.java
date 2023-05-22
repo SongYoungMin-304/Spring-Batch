@@ -47,7 +47,7 @@ public interface AutoQueRepository extends JpaRepository<AutoQueue, Long>{
 			")  " +
 			" from AutoQueue a" +
 			" where a.flag = 'I' and a.pollKey = :pollKey" +
-			" group by a.pollKey" +
+			" group by a.pollKey, a.templateMsgId" +
 			"")
 	List<AutoQueSchdDto> findBySchdByPollKey(
         @Param("pollKey") String pollKey);

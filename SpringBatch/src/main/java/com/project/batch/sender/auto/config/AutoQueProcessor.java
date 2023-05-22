@@ -18,7 +18,7 @@ public class AutoQueProcessor extends DefaultQueProcessor<AutoQueDto>{
 	@Override
 	public AutoQueDto process(AutoQueDto item) throws Exception {
 		// TODO Auto-generated method stub
-		Thread.sleep(1000000);
+		Thread.sleep(100);
 		log.info("Check Process"+item.toString());
 		return item;
 	}

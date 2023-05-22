@@ -31,7 +31,7 @@ public class InitDb {
 
         public void 데이터10000건(){
 
-            for(int a = 0; a < 100; a++){
+            for(int a = 0; a < 1; a++){
                 AutoQueue autoQueue = new AutoQueue();
                 autoQueue.setQueueName("queue네임");
                 autoQueue.setFlag("N");

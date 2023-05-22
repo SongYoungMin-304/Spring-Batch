@@ -445,3 +445,5 @@ public TaskExecutor taskExecutor(){
 3. chunk size를 통해서 list에 담을 데이터 사이즈 조절
 
 - 대량 업데이트 시에는 batchUpdate 등을 사용하는 게 좋은 데 해당 경우에 처리할 갯수를 정해줌으로써 속도에 이점을 가질 수 있다.
+
+-> 해당 작업을 통해서 같은 templateMsgId를 가진 Job은 실행이 안되도록 제약 처리

@@ -1,22 +1,26 @@
 package com.project.batch.sender.auto.config;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.project.batch.sender.tasklet.SimpleTasklet;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.configuration.annotation.*;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,13 +50,14 @@ public class AutoQueJobConfiguration {
     //private final TaskExecutor dbIntegrationBatchThreadPool;
 	
 	@Bean(name= JOB_NAME)
-    public Job onlineXmsQueInterfaceJob(Step autoQueSendStep,
+    public Job onlineXmsQueInterfaceJob(Step autoQueSendStep, Step taskletStep, Step simpleTaskletStep,
                                     AutoQueJobListener autoQueJobListener) {
         return jobBuilderFactory.get(JOB_NAME)
                 .incrementer(new RunIdIncrementer())
                 .listener(autoQueJobListener)
-                .flow(autoQueSendStep)
-                .end()
+                .start(taskletStep)
+                .next(autoQueSendStep)
+                .next(simpleTaskletStep)
                 .build();
     }
 	@Bean(name="autoQueSendStep")
@@ -125,6 +130,63 @@ public class AutoQueJobConfiguration {
         executor.setMaxPoolSize(8);
         executor.setThreadNamePrefix("async-thread-");
         return executor;
+    }
+
+
+
+    @Bean(name="taskletStep")
+    public Step taskletStep(){
+        return stepBuilderFactory.get("taskletStep")
+                .tasklet(tasklet())
+                .build();
+    }
+
+    @Bean(name="simpleTaskletStep")
+    public Step simpleTaskletStep(SimpleTasklet simpleTasklet){
+        return stepBuilderFactory.get("simpleTaskletStep")
+                .tasklet(simpleTasklet)
+                .build();
+    }
+
+    public Tasklet tasklet(){
+        return ((contribution, chunkContext) -> {
+            List<String> items = getItems();
+            log.info("items : "+ items.toString());
+            return RepeatStatus.FINISHED;
+        });
+    }
+
+    public Tasklet tasklet2(){
+        Tasklet tasklet = new Tasklet() {
+            @Override
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                return RepeatStatus.FINISHED;
+            }
+        };
+
+        Tasklet tasklet2 = new Tasklet() {
+            @Override
+            public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                return null;
+            }
+        };
+
+        Tasklet tasklet3 =  (contributeion, chunkContext) ->{
+            log.info("으악");
+            return RepeatStatus.FINISHED;
+        };
+
+        return tasklet;
+    }
+
+    private List<String> getItems(){
+        List<String> items = new ArrayList<>();
+
+        for(int i = 0; i < 100; i++){
+            items.add(i + "test!");
+        }
+
+        return items;
     }
 
 }
