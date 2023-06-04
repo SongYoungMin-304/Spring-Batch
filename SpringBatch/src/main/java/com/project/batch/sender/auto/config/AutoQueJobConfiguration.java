@@ -1,37 +1,34 @@
 package com.project.batch.sender.auto.config;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
+import com.project.batch.domain.AutoQueue;
+import com.project.batch.repository.AutoQueueRepository;
+import com.project.batch.sender.QuerydslPagingItemReader;
 import com.project.batch.sender.tasklet.SimpleTasklet;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
-import org.springframework.batch.core.configuration.annotation.*;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.item.database.JdbcPagingItemReader;
-import org.springframework.batch.item.database.Order;
-import org.springframework.batch.item.database.PagingQueryProvider;
-import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
-import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-
-import com.project.batch.model.AutoQueDto;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+
+//import com.project.batch.sender.QuerydslPagingItemReader;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -48,6 +45,10 @@ public class AutoQueJobConfiguration {
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
     //private final TaskExecutor dbIntegrationBatchThreadPool;
+
+    private final EntityManagerFactory emf;
+
+    private final AutoQueueRepository autoQueueRepository;
 	
 	@Bean(name= JOB_NAME)
     public Job onlineXmsQueInterfaceJob(Step autoQueSendStep, Step taskletStep, Step simpleTaskletStep,
@@ -55,9 +56,9 @@ public class AutoQueJobConfiguration {
         return jobBuilderFactory.get(JOB_NAME)
                 .incrementer(new RunIdIncrementer())
                 .listener(autoQueJobListener)
-                .start(taskletStep)
-                .next(autoQueSendStep)
-                .next(simpleTaskletStep)
+                //.start(taskletStep)
+                .start(autoQueSendStep)
+                //.next(simpleTaskletStep)
                 .build();
     }
 	@Bean(name="autoQueSendStep")
@@ -67,17 +68,17 @@ public class AutoQueJobConfiguration {
             AutoQueItemWriter autoQueItemWriter) throws Exception {
 
         return stepBuilderFactory.get("autoQueSendStep")
-                .<AutoQueDto, AutoQueDto>chunk(chunkSize)
-                .reader(autoQueItemReader(null,null,null))
+                .<AutoQueue, AutoQueue>chunk(chunkSize)
+                .reader(queueReader(null,null,null))
                 .processor(autoQueProcessor)
                 .writer(autoQueItemWriter)
                 .taskExecutor(taskExecutor())
-                .throttleLimit(8)
+                .throttleLimit(1)
                 //.taskExecutor(dbIntegrationBatchThreadPool)
                 .build();
     }
 	
-	@Bean(name = "autoQueItemReader")
+	/*@Bean(name = "autoQueItemReader")
     @StepScope
     public JdbcPagingItemReader<AutoQueDto> autoQueItemReader(
     		 @Value("#{jobParameters['min.seq']}") String minSeq,
@@ -121,7 +122,7 @@ public class AutoQueJobConfiguration {
         queryProvider.setSortKeys(sortKeys);
 
         return queryProvider.getObject();
-    }
+    }*/
 
     @Bean
     public TaskExecutor taskExecutor(){
@@ -187,6 +188,22 @@ public class AutoQueJobConfiguration {
         }
 
         return items;
+    }
+
+    /*
+    * query dsl reader
+    *
+    */
+
+    @Bean
+    @StepScope
+    public QuerydslPagingItemReader<AutoQueue> queueReader(
+            @Value("#{jobParameters['min.seq']}") Long minSeq,
+            @Value("#{jobParameters['max.seq']}") Long maxSeq,
+            @Value("#{jobParameters['poll.key']}") String pollKey
+    ){
+        return new QuerydslPagingItemReader<>(emf, chunkSize,
+                autoQueueRepository.getAutoQueue(minSeq, maxSeq, pollKey, "01"));
     }
 
 }

@@ -1,7 +1,7 @@
 package com.project.batch.config;
 
 import com.project.batch.domain.AutoQueue;
-import com.project.batch.repository.AutoQueRepository;
+import com.project.batch.repository.AutoQueueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 @RequiredArgsConstructor
 public class InitDb {
 
-    private final AutoQueRepository autoQueRepository;
+    private final AutoQueueRepository autoQueueRepository;
 
     private final InitService initService;
 

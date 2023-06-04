@@ -4,6 +4,8 @@ plugins {
 	id 'java'
 	// 도커 연결 처리
 	id 'com.google.cloud.tools.jib' version '3.1.2'
+
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.project'
@@ -41,11 +43,30 @@ dependencies {
 	implementation group: 'com.oracle.ojdbc', name: 'ojdbc8', version: '19.3.0.0'
 	implementation group: 'com.oracle.ojdbc', name: 'orai18n', version: '19.3.0.0'
 
+	implementation 'com.querydsl:querydsl-jpa'
+
+
 	// https://mvnrepository.com/artifact/com.h2database/h2
 	testImplementation group: 'com.h2database', name: 'h2', version: '1.3.148'
 
 
 }
+
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+//querydsl 추가 끝
 
 /*test {
 	useJUnitPlatform()
