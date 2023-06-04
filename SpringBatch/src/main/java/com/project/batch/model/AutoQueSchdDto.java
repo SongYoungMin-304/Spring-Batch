@@ -1,5 +1,6 @@
 package com.project.batch.model;
 
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,12 +12,13 @@ public class AutoQueSchdDto {
 	
 	private static final String DELIM  = "|";
 	
-	private Long minSeq;
-	private Long maxSeq;
+	private long minSeq;
+	private long maxSeq;
 	private String pollKey;
 	private String templateMsgId;
-	
-	public AutoQueSchdDto(Long minSeq, Long maxSeq, String pollKey, String templateMsgId) {
+
+	@QueryProjection
+	public AutoQueSchdDto(long minSeq, long maxSeq, String pollKey, String templateMsgId) {
 		this.minSeq = minSeq;
 		this.maxSeq = maxSeq;
 		this.pollKey = pollKey;

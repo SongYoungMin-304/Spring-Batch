@@ -1,4 +1,4 @@
-package com.project.batch.sender;
+package com.project.batch.sender.processor;
 
 import com.project.batch.model.AutoQueDto;
 

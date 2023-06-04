@@ -1,4 +1,4 @@
-package com.project.batch.sender;
+package com.project.batch.sender.reader;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import org.springframework.batch.item.database.AbstractPagingItemReader;

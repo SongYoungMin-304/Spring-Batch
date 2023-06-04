@@ -13,5 +13,5 @@ public interface ChnScheduleService<T> {
 
 	void setRunning(String scheduleId, boolean isRun);
 
-	int updatePollKey(String pollKey, String templateMsgId);
+	long updatePollKey(String pollKey, String templateMsgId);
 }

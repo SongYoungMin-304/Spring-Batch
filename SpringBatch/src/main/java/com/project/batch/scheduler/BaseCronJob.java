@@ -60,14 +60,20 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
 
+        log.info("ssssssssssssssssssssssssssss");
+
         List<String> templateMsgIdList = autoBaseScheduleService.getTemplateMsgId();
+
+        log.info("aaaaaaaaaaaaa"+templateMsgIdList.size());
 
         for (String templateMsgId : templateMsgIdList) {
 
             if(!autoBaseScheduleService.isRunning(templateMsgId)){
                 final String pollKey = TimeBasedSequenceIdFactory.seq();
 
-                int updateSucc = autoBaseScheduleService.updatePollKey(pollKey, templateMsgId);
+                log.info("pollKey"+pollKey);
+
+                long updateSucc = autoBaseScheduleService.updatePollKey(pollKey, templateMsgId);
 
                 if (updateSucc == 0) {
                     log.info("There is no Scheduler");
