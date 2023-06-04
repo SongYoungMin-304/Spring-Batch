@@ -1,18 +1,11 @@
 package com.project.batch.repository;
 
 import com.project.batch.domain.AutoQueue;
-import com.project.batch.model.AutoQueSchdDto;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import javax.transaction.Transactional;
-import java.util.List;
 
 public interface AutoQueueRepository extends JpaRepository<AutoQueue, Long>, AutoQueueRepositoryCustom{
 	
-	@Transactional
+/*	@Transactional
 	@Modifying(clearAutomatically = true)
 	@Query(value="update AutoQueue a set a.flag = 'I', a.pollKey = :pollKey " +
 			" where 1 = 1 " +
@@ -53,5 +46,5 @@ public interface AutoQueueRepository extends JpaRepository<AutoQueue, Long>, Aut
 	@Query(value="select distinct a.templateMsgId" +
 			" from AutoQueue a" +
 			" where a.flag = 'N' and a.pollKey IS NULL")
-	List<String> findlist();
+	List<String> findlist();*/
 }

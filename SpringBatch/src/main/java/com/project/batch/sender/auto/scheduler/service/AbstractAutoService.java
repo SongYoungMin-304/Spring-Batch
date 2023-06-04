@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,11 +25,8 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	@Value("${max.msg.expire.days}")
     private int maxMsgExpiredDays;
 	
-	public int updatePollKey(String pollKey, String templateMsgId) {
-	   	 String nowDateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateTimeFormat));
-	     String twoHourAgoDateStr = LocalDateTime.now().minusDays(maxMsgExpiredDays)
-	         .format(DateTimeFormatter.ofPattern(dateTimeFormat));
-	     return autoQueueRepository.updatePreAutoQueue(pollKey, templateMsgId);
+	public long updatePollKey(String pollKey, String templateMsgId) {
+	   	 return autoQueueRepository.updatePreAutoQueue(pollKey, templateMsgId);
 	}
 
 	@Override
@@ -45,13 +40,13 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 
 	@Override
 	public List<String> getTemplateMsgId() {
-		// TODO Auto-generated method stub
-		return autoQueueRepository.findlist();
+		return autoQueueRepository.findList();
 	}
 
 	@Override
 	public boolean isRunning(String scheduleId) {
 		Boolean isRun = this.scheduleHashMap.get(scheduleId);
+		log.info("kkkk");
 		if(isRun == null){
 			return false;
 		}else{

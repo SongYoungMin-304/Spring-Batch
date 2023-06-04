@@ -22,7 +22,7 @@ public class BaseSchedulingConfiguration {
     public void start() {
         log.info("JobController set..");
         try{
-            registAutoScheduler();
+            //registAutoScheduler();
         }catch (Exception e) {
             log.error("SchedulerException", e);
         }

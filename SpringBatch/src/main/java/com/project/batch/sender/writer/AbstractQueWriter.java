@@ -1,4 +1,4 @@
-package com.project.batch.sender;
+package com.project.batch.sender.writer;
 
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ItemWriter;

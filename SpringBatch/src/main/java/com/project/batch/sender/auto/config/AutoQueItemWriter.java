@@ -1,12 +1,13 @@
 package com.project.batch.sender.auto.config;
 
 import com.project.batch.domain.AutoQueue;
-import com.project.batch.repository.AutoQueueRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.EntityManagerFactory;
 import java.util.List;
 
 @Slf4j
@@ -14,10 +15,14 @@ import java.util.List;
 @Component
 public class AutoQueItemWriter implements ItemWriter<AutoQueue> {
 
-	private final AutoQueueRepository autoQueueRepository;
+	private final EntityManagerFactory emf;
+	private final JpaItemWriter<AutoQueue> autoQueueJpaItemWriter;
 
-	public AutoQueItemWriter(AutoQueueRepository autoQueueRepository) {
-		this.autoQueueRepository = autoQueueRepository;
+	public AutoQueItemWriter(EntityManagerFactory emf) {
+		this.emf = emf;
+		this.autoQueueJpaItemWriter = new JpaItemWriter<>();
+
+		autoQueueJpaItemWriter.setEntityManagerFactory(emf);
 	}
 
 	@Override
@@ -28,8 +33,11 @@ public class AutoQueItemWriter implements ItemWriter<AutoQueue> {
 
 		for(AutoQueue autoQueDto : items){
 			log.info("테스트"+autoQueDto.toString());
-			autoQueueRepository.updateAutoQueue(autoQueDto.getPollKey(), autoQueDto.getQueueId());
+			autoQueDto.setFlag("Y");
 		}
+
+		// 변경 감지로 인해서 별 처리 필요 X
+		//autoQueueJpaItemWriter.write(items);
 
 		log.info("check Writer");
 		

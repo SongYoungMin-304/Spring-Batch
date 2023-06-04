@@ -7,10 +7,10 @@ import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 
 @Configuration
 public class BatchConfiguration {
-	
-	 @Bean(name = "timeBasedSequenceIdFactory")
-	    public void timeBasedSequenceIdFactory()
-	    {
-	        new TimeBasedSequenceIdFactory().start();
-	    }
+
+    @Bean(name = "timeBasedSequenceIdFactory")
+    public void timeBasedSequenceIdFactory()
+    {
+        new TimeBasedSequenceIdFactory().start();
+    }
 }

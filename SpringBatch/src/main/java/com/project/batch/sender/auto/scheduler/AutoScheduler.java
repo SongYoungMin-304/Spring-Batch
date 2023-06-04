@@ -1,27 +1,21 @@
-/*
 package com.project.batch.sender.auto.scheduler;
 
-import java.util.List;
+/*
+ * scheduler 대신 quartzTrigger을 사용하기 위한 조치
+ *
+ */
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
-import com.project.batch.config.annotation.AopAnnotation;
 import com.project.batch.core.util.TimeBasedSequenceIdFactory;
 import com.project.batch.model.AutoQueSchdDto;
 import com.project.batch.sender.auto.scheduler.service.AbstractAutoService;
 import com.project.batch.sender.auto.scheduler.service.TemplateService;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-*/
-/*
- * scheduler 대신 quartzTrigger을 사용하기 위한 조치
- *
- *//*
+import java.util.List;
 
 @Slf4j
 @Component
@@ -32,7 +26,7 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 
 	public AutoScheduler(
 			AbstractAutoService abstractAutoService,
-			JobLauncher JobLauncher, 
+			JobLauncher JobLauncher,
 			Job autoQueInterfaceJob,
 			TemplateService templateService
 			) {
@@ -41,17 +35,15 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 
 	//@Scheduled(fixedDelay = 5000, cron = "1 * * * * *")
 	//@AopAnnotation(name = "auto-send", alone = true, deadLine = LIMIT_TIME)
-	//@Scheduled(cron = "30 * * * * *")
+	@Scheduled(cron = "0/5 * * * * ?")
 	@Override
 	public void scheduled(){
-
-		log.info("테스트");
 		
 		final String pollKey = TimeBasedSequenceIdFactory.seq();
 		//final String pollKey = "1234";
 
 		List<AutoQueSchdDto> list = this.doScheduleList(pollKey);
-		
+
 		if (list == null)
 			return;
 		
@@ -62,4 +54,3 @@ public class AutoScheduler extends AbstractAutoScheduler<AutoQueSchdDto> {
 	}
 
 }
-*/
