@@ -1,28 +1,24 @@
 package com.project.batch.sender.auto.scheduler.service;
 
+import com.project.batch.model.AutoQueSchdDto;
+import com.project.batch.repository.AutoQueueRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.project.batch.domain.TemplateInfo;
-import com.project.batch.model.AutoQueSchdDto;
-import com.project.batch.repository.AutoQueRepository;
-import com.project.batch.repository.TemplateMsgInfoRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	
-	private final AutoQueRepository autoQueRepository;
+	private final AutoQueueRepository autoQueueRepository;
 
 	private Map<String, Boolean> scheduleHashMap = new ConcurrentHashMap<>();
 	
@@ -35,7 +31,7 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	   	 String nowDateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateTimeFormat));
 	     String twoHourAgoDateStr = LocalDateTime.now().minusDays(maxMsgExpiredDays)
 	         .format(DateTimeFormatter.ofPattern(dateTimeFormat));
-	     return autoQueRepository.updatePreAutoQueue(pollKey, templateMsgId);
+	     return autoQueueRepository.updatePreAutoQueue(pollKey, templateMsgId);
 	}
 
 	@Override
@@ -44,13 +40,13 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	}
 
 	public List<AutoQueSchdDto> getScheduleList(String pollKey){
-		return autoQueRepository.findBySchdByPollKey(pollKey);
+		return autoQueueRepository.findBySchdByPollKey(pollKey);
 	}
 
 	@Override
 	public List<String> getTemplateMsgId() {
 		// TODO Auto-generated method stub
-		return autoQueRepository.findlist();
+		return autoQueueRepository.findlist();
 	}
 
 	@Override

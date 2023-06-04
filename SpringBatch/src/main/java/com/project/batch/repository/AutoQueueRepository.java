@@ -1,18 +1,16 @@
 package com.project.batch.repository;
 
-import java.util.List;
-
-import javax.transaction.Transactional;
-
+import com.project.batch.domain.AutoQueue;
+import com.project.batch.model.AutoQueSchdDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.project.batch.domain.AutoQueue;
-import com.project.batch.model.AutoQueSchdDto;
+import javax.transaction.Transactional;
+import java.util.List;
 
-public interface AutoQueRepository extends JpaRepository<AutoQueue, Long>{
+public interface AutoQueueRepository extends JpaRepository<AutoQueue, Long>, AutoQueueRepositoryCustom{
 	
 	@Transactional
 	@Modifying(clearAutomatically = true)

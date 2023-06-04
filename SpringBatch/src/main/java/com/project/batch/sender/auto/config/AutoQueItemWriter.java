@@ -1,54 +1,37 @@
 package com.project.batch.sender.auto.config;
 
-import java.util.List;
-
-import com.project.batch.repository.AutoQueRepository;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
+import com.project.batch.domain.AutoQueue;
+import com.project.batch.repository.AutoQueueRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.stereotype.Component;
 
-import com.project.batch.model.AutoQueDto;
-import com.project.batch.sender.DefaultQueWriter;
-
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Slf4j
 @StepScope
 @Component
-public class AutoQueItemWriter extends DefaultQueWriter<AutoQueDto>{
+public class AutoQueItemWriter implements ItemWriter<AutoQueue> {
 
-	private final AutoQueRepository autoQueRepository;
+	private final AutoQueueRepository autoQueueRepository;
 
-	public AutoQueItemWriter(AutoQueRepository autoQueRepository) {
-		this.autoQueRepository = autoQueRepository;
+	public AutoQueItemWriter(AutoQueueRepository autoQueueRepository) {
+		this.autoQueueRepository = autoQueueRepository;
 	}
 
 	@Override
-	public void write(List<? extends AutoQueDto> items) throws Exception {
+	public void write(List<? extends AutoQueue> items) throws Exception {
 		// TODO Auto-generated method stub
 
 		log.info("사이즈 체크" + items.size());
 
-		for(AutoQueDto autoQueDto : items){
+		for(AutoQueue autoQueDto : items){
 			log.info("테스트"+autoQueDto.toString());
-			autoQueRepository.updateAutoQueue(autoQueDto.getPollKey(), autoQueDto.getQueueId());
+			autoQueueRepository.updateAutoQueue(autoQueDto.getPollKey(), autoQueDto.getQueueId());
 		}
 
 		log.info("check Writer");
 		
 	}
-
-	@Override
-	public void beforeStep(StepExecution stepExecution) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public ExitStatus afterStep(StepExecution stepExecution) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }
