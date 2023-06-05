@@ -59,12 +59,7 @@ public abstract class BaseCronJob extends QuartzJobBean implements Interruptable
 
     @Override
     protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
-
-        log.info("ssssssssssssssssssssssssssss");
-
         List<String> templateMsgIdList = autoBaseScheduleService.getTemplateMsgId();
-
-        log.info("aaaaaaaaaaaaa"+templateMsgIdList.size());
 
         for (String templateMsgId : templateMsgIdList) {
 

@@ -1,7 +1,7 @@
 package com.project.batch.sender.auto.scheduler.service;
 
 import com.project.batch.model.AutoQueSchdDto;
-import com.project.batch.repository.AutoQueueRepository;
+import com.project.batch.repository.auto.AutoQueueRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +46,6 @@ public class AbstractAutoService implements ChnScheduleService<AutoQueSchdDto>{
 	@Override
 	public boolean isRunning(String scheduleId) {
 		Boolean isRun = this.scheduleHashMap.get(scheduleId);
-		log.info("kkkk");
 		if(isRun == null){
 			return false;
 		}else{
