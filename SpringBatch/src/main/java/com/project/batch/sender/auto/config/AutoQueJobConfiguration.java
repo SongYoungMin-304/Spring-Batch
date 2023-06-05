@@ -1,7 +1,7 @@
 package com.project.batch.sender.auto.config;
 
 import com.project.batch.domain.AutoQueue;
-import com.project.batch.repository.AutoQueueRepository;
+import com.project.batch.repository.auto.AutoQueueRepository;
 import com.project.batch.sender.reader.QuerydslPagingItemReader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class AutoQueJobConfiguration {
     }
 	@Bean(name="autoQueSendStep")
     public Step autoSendStep(
-            @Value("${auto.throttle.limit}00") int throttleLimit,
+            @Value("${auto.throttle.limit}") int throttleLimit,
             AutoQueProcessor autoQueProcessor,
             AutoQueItemWriter autoQueItemWriter) throws Exception {
 

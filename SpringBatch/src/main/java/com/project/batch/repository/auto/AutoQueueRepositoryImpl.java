@@ -1,4 +1,4 @@
-package com.project.batch.repository;
+package com.project.batch.repository.auto;
 
 import com.project.batch.domain.AutoQueue;
 import com.project.batch.model.AutoQueSchdDto;

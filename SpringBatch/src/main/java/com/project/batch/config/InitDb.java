@@ -1,7 +1,9 @@
 package com.project.batch.config;
 
 import com.project.batch.domain.AutoQueue;
-import com.project.batch.repository.AutoQueueRepository;
+import com.project.batch.domain.StepQueue;
+import com.project.batch.domain.TaskletQueue;
+import com.project.batch.repository.auto.AutoQueueRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,20 @@ public class InitDb {
                 autoQueue.setTemplateMsgId("ABCD");
 
                 em.persist(autoQueue);
+            }
+
+            for(int a = 0; a < 100; a++){
+                StepQueue stepQueue = new StepQueue();
+                stepQueue.setFlag("N");
+
+                em.persist(stepQueue);
+            }
+
+            for(int a = 0; a < 100; a++){
+                TaskletQueue taskletQueue = new TaskletQueue();
+                taskletQueue.setFlag("N");
+
+                em.persist(taskletQueue);
             }
         }
 
